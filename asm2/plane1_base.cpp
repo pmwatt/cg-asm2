@@ -66,6 +66,8 @@ gmtl::Matrix44f zrotp_mat; // positive
 gmtl::Matrix44f zrotn_mat; // negative
 gmtl::Matrix44f yrotp_mat; // positive
 gmtl::Matrix44f yrotn_mat; // negative
+gmtl::Matrix44f xrotp_mat; // positive
+gmtl::Matrix44f xrotn_mat; // negative
 
 
 //|___________________
@@ -127,6 +129,16 @@ void InitMatrices()
 
 	// Negative Y-rotation (yaw)
 	gmtl::invert(yrotn_mat, yrotp_mat);
+
+	// Positive X-rotation (pitch)
+	xrotp_mat.set(1, 0, 0, 0,
+		0, COSTHETA, -SINTHETA, 0,
+		0, SINTHETA, COSTHETA, 0,
+		0, 0, 0, 1);
+	xrotp_mat.setState(gmtl::Matrix44f::ORTHOGONAL);
+
+	// Negative X-rotation (pitch)
+	gmtl::invert(xrotn_mat, xrotp_mat);
 
 	// Inits plane pose
 	plane_pose.set(1, 0, 0, 1.0f,
@@ -261,7 +273,23 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		plane_pose = plane_pose * ztransn_mat;
 		break;
 
+	// PITCH //////////////////////////
+	case 'x': // Pitches the plane (+ X-rot)
+		plane_pose = plane_pose * xrotp_mat;
+		break;
+	case 'w': // Pitches the plane (- X-rot)
+		plane_pose = plane_pose * xrotn_mat;
+		break;
 
+	// YAW //////////////////////////
+	case 'a': // Yaws the plane (+ Y-rot)
+		plane_pose = plane_pose * yrotp_mat;
+		break;
+	case 'd': // Yaws the plane (- Y-rot)
+		plane_pose = plane_pose * yrotn_mat;
+		break;
+
+	// ROLL //////////////////////////
 	case 'e': // Rolls the plane (+ Z-rot)
 		plane_pose = plane_pose * zrotp_mat;
 		break;
@@ -269,12 +297,7 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		plane_pose = plane_pose * zrotn_mat;
 		break;
 
-	case 'a': // Yaws the plane (+ Y-rot)
-		plane_pose = plane_pose * yrotp_mat;
-		break;
-	case 'd': // Yaws the plane (- Y-rot)
-		plane_pose = plane_pose * yrotn_mat;
-		break;
+
 
 
 		// TODO: Add the remaining controls/transforms        
