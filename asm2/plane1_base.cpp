@@ -36,8 +36,8 @@
 //|___________________
 
 // Plane dimensions
-const float P_WIDTH = 3;
-const float P_LENGTH = 3;
+const float P_WIDTH = 1.5;
+const float P_LENGTH = 1.5;
 const float P_HEIGHT = 1.5;
 
 // Camera's view frustum 
@@ -81,7 +81,7 @@ void DisplayFunc(void);
 void KeyboardFunc(unsigned char key, int x, int y);
 void ReshapeFunc(int w, int h);
 void DrawCoordinateFrame(const float l);
-void DrawPlane(const float width, const float length, const float height);
+void DrawObject(const float width, const float length, const float height);
 
 //|____________________________________________________________________
 //|
@@ -213,7 +213,7 @@ void DisplayFunc(void)
 	// Draws plane and its local frame
 	modelview_mat *= plane_pose;               // M = C^-1 * T
 	glLoadMatrixf(modelview_mat.mData);
-	DrawPlane(P_WIDTH, P_LENGTH, P_HEIGHT);
+	DrawObject(P_WIDTH, P_LENGTH, P_HEIGHT);
 	DrawCoordinateFrame(3);
 
 	/*
@@ -273,7 +273,7 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		plane_pose = plane_pose * ztransn_mat;
 		break;
 
-	// PITCH //////////////////////////
+		// PITCH //////////////////////////
 	case 'x': // Pitches the plane (+ X-rot)
 		plane_pose = plane_pose * xrotp_mat;
 		break;
@@ -281,7 +281,7 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		plane_pose = plane_pose * xrotn_mat;
 		break;
 
-	// YAW //////////////////////////
+		// YAW //////////////////////////
 	case 'a': // Yaws the plane (+ Y-rot)
 		plane_pose = plane_pose * yrotp_mat;
 		break;
@@ -289,7 +289,7 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		plane_pose = plane_pose * yrotn_mat;
 		break;
 
-	// ROLL //////////////////////////
+		// ROLL //////////////////////////
 	case 'e': // Rolls the plane (+ Z-rot)
 		plane_pose = plane_pose * zrotp_mat;
 		break;
@@ -380,24 +380,101 @@ void DrawCoordinateFrame(const float l)
 //! Draws the plane.
 //|____________________________________________________________________
 
-void DrawPlane(const float width, const float length, const float height)
+void DrawObject(const float width, const float length, const float height)
 {
-	float w = width / 2;
-	float l = length / 2;
+	float w2 = width / 2;
+	float h2 = height / 2;
+	float l2 = length / 2;
 
-	glBegin(GL_TRIANGLES);
-	// Body is red
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, l);
-	glVertex3f(w, 0.0f, -l);
-	glVertex3f(-w, 0.0f, -l);
+	float cr = 0.1f;
+	float cg = 0.3f;
+	float cb = 0.2f;
+	float c_delta = 0.05f;
 
-	// Wing is blue
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glVertex3f(0.0f, 0.0f, -l);
-	glVertex3f(0.0f, height, -l);
+	glBegin(GL_QUADS);
+	// front
+	glColor3f(cr, cg, cb);
+	glVertex3f(w2, h2, -l2);
+	glVertex3f(-w2, h2, -l2);
+	glVertex3f(-w2, -h2, -l2);
+	glVertex3f(w2, -h2, -l2);
+
+	cg += c_delta;
+
+	// right
+	glColor3f(cr, cg, cb);
+	glVertex3f(w2, h2, -l2);
+	glVertex3f(w2, h2, l2);
+	glVertex3f(w2, -h2, l2);
+	glVertex3f(w2, -h2, -l2);
+
+	cg += c_delta;
+
+	// top
+	glColor3f(cr, cg, cb);
+	glVertex3f(w2, h2, l2);
+	glVertex3f(-w2, h2, l2);
+	glVertex3f(-w2, h2, -l2);
+	glVertex3f(w2, h2, -l2);
+
+	cg += c_delta;
+
+	// bottom
+	glColor3f(cr, cg, cb);
+	glVertex3f(w2, -h2, -l2);
+	glVertex3f(-w2, -h2, -l2);
+	glVertex3f(-w2, -h2, l2);
+	glVertex3f(w2, -h2, l2);
+
+	cg += c_delta;
+
+	// back
+	glColor3f(cr, cg, cb);
+	glVertex3f(-w2, h2, l2);
+	glVertex3f(w2, h2, l2);
+	glVertex3f(w2, -h2, l2);
+	glVertex3f(-w2, -h2, l2);
+
+	cg += c_delta;
+
+	// left
+	glColor3f(cr, cg, cb);
+	glVertex3f(-w2, h2, -l2);
+	glVertex3f(-w2, h2, l2);
+	glVertex3f(-w2, -h2, l2);
+	glVertex3f(-w2, -h2, -l2);
 	glEnd();
+
+	// wings //////////////////////////////////
+
+	//glBegin(GL_TRIANGLES);
+	//glColor3f(.0f, .0f, .0f);
+	//glVertex3f(.0f, h2 + 0.5, -l2);
+	//glVertex3f(.0f, h2, -l2);
+	//glVertex3f(.0f, h2, -l2 / 2);
+	//glEnd();
+
+	//glBegin(GL_TRIANGLES);
+	//glColor3f(.0f, .0f, .0f);
+	//glVertex3f(.0f, h2 + 0.5, -l2);
+	//glVertex3f(.0f, h2, -l2);
+	//glVertex3f(.0f, h2, -l2 / 2);
+	//glEnd();
+
+	//glBegin(GL_TRIANGLES);
+	//glColor3f(.0f, .0f, .0f);
+	//glVertex3f(.0f, h2, -l2);
+	//glVertex3f(.0f, h2, -l2);
+	//glVertex3f(.0f, h2, -l2 / 2);
+	//glEnd();
+
+	//glBegin(GL_TRIANGLES);
+	//glColor3f(.0f, .0f, .0f);
+	//glVertex3f(.0f, h2 + 0.5, -l2);
+	//glVertex3f(.0f, h2, -l2);
+	//glVertex3f(.0f, h2, -l2 / 2);
+	glEnd();
+
 }
 
 //|____________________________________________________________________
