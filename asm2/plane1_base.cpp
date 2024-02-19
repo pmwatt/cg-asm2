@@ -64,6 +64,8 @@ gmtl::Matrix44f ztransp_mat;
 gmtl::Matrix44f ztransn_mat;
 gmtl::Matrix44f zrotp_mat; // positive
 gmtl::Matrix44f zrotn_mat; // negative
+gmtl::Matrix44f yrotp_mat; // positive
+gmtl::Matrix44f yrotn_mat; // negative
 
 
 //|___________________
@@ -115,6 +117,16 @@ void InitMatrices()
 
 	// Negative Z-rotation (roll)
 	gmtl::invert(zrotn_mat, zrotp_mat);
+
+	// Positive Y-rotation (roll)
+	yrotp_mat.set(COSTHETA, 0, SINTHETA, 0,
+		0, 1, 0, 0,
+		-SINTHETA, 0, COSTHETA, 0,
+		0, 0, 0, 1);
+	yrotp_mat.setState(gmtl::Matrix44f::ORTHOGONAL);
+
+	// Negative Y-rotation (yaw)
+	gmtl::invert(yrotn_mat, yrotp_mat);
 
 	// Inits plane pose
 	plane_pose.set(1, 0, 0, 1.0f,
@@ -255,6 +267,13 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		break;
 	case 'q': // Rolls the plane (- Z-rot)
 		plane_pose = plane_pose * zrotn_mat;
+		break;
+
+	case 'a': // Yaws the plane (+ Y-rot)
+		plane_pose = plane_pose * yrotp_mat;
+		break;
+	case 'd': // Yaws the plane (- Y-rot)
+		plane_pose = plane_pose * yrotn_mat;
 		break;
 
 
