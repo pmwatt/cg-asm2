@@ -59,6 +59,10 @@ gmtl::Matrix44f plane_pose; // T, as defined in the handout, initialized to IDEN
 gmtl::Matrix44f cam_pose;   // C, as defined in the handout
 gmtl::Matrix44f view_mat;   // View transform is C^-1 (inverse of the camera transform C)
 
+// fixed top-down camera
+gmtl::Matrix44f cam_pose_fixed; // F, as defined in the handout
+gmtl::Matrix44f view_mat_fixed; // view transform is F^-1 (inverse of the fixed topdown camera transform F)
+
 // Transformation matrices applied to plane and camera poses
 gmtl::Matrix44f ztransp_mat;
 gmtl::Matrix44f ztransn_mat;
@@ -140,20 +144,34 @@ void InitMatrices()
 	// Negative X-rotation (pitch)
 	gmtl::invert(xrotn_mat, xrotp_mat);
 
-	// Inits plane pose
+	// Inits plane pose (rigid)
 	plane_pose.set(1, 0, 0, 1.0f,
 		0, 1, 0, 0.0f,
 		0, 0, 1, 4.0f,
 		0, 0, 0, 1.0f);
 	plane_pose.setState(gmtl::Matrix44f::AFFINE);     // AFFINE because the plane pose can contain both translation and rotation         
 
-	// Inits camera pose and view transform
+	// Inits camera pose and view transform (rigid)
 	cam_pose.set(1, 0, 0, 2.0f,
 		0, 1, 0, 1.0f,
 		0, 0, 1, 15.0f,
 		0, 0, 0, 1.0f);
 	cam_pose.setState(gmtl::Matrix44f::AFFINE);
 	gmtl::invert(view_mat, cam_pose);                 // View transform is the inverse of the camera pose
+	
+	gmtl::Matrix44f rot_mat, trans_mat;
+	rot_mat.set(1, 0, 0, 0,				// X rot by -90 degrees
+		0, 0, 1, 0,
+		0, -1, 0, 0,
+		0, 0, 0, 1);
+	rot_mat.setState(gmtl::Matrix44f::ORTHOGONAL);
+	trans_mat.set(1, 0, 0, 0,			// translate y by 20
+		0, 1, 0, 30,
+		0, 0, 1, 0,
+		0, 0, 0, 1);
+	trans_mat.setState(gmtl::Matrix44f::TRANS);
+	cam_pose_fixed = trans_mat * rot_mat;
+	gmtl::invert(view_mat_fixed, cam_pose_fixed);		// view transform is the inverse of the camera pose
 }
 
 //|____________________________________________________________________
@@ -168,7 +186,7 @@ void InitMatrices()
 
 void InitGL(void)
 {
-	glClearColor(0.7f, 0.7f, 0.7f, 1.0f);
+	glClearColor(0.7f, 0.8f, 0.7f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel(GL_SMOOTH);
 }
@@ -195,6 +213,7 @@ void DisplayFunc(void)
 	//| Viewport 1 rendering: shows the moving camera's view
 	//|____________________________________________________________________
 
+	// setup viewport transformation matrix in the pipeline
 	glViewport(0, 0, (GLsizei)w_width / 2, (GLsizei)w_height);
 
 	glMatrixMode(GL_PROJECTION);
@@ -207,7 +226,7 @@ void DisplayFunc(void)
 
 	// Draws world coordinate frame
 	modelview_mat = view_mat;                  // M = C^-1
-	glLoadMatrixf(modelview_mat.mData);
+	glLoadMatrixf(modelview_mat.mData); // load input matrix into the target (modelview) matrix
 	DrawCoordinateFrame(10);
 
 	// Draws plane and its local frame
@@ -235,15 +254,30 @@ void DisplayFunc(void)
 	//| TODO: Viewport 2 rendering: shows the fixed top-down view
 	//|____________________________________________________________________
 
-	  // glViewport...
+	glViewport(w_width/2, 0, (GLsizei)w_width / 2, (GLsizei)w_height);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(CAM_FOV, (float)w_width / (2 * w_height), 0.1f, 100.0f);
 
-	// glMatrixMode(GL_MODELVIEW);
-	// glLoadIdentity(); 
-	// ...
+	 glMatrixMode(GL_MODELVIEW);
+	 glLoadIdentity();
+
+	 // draws world coordinate frame
+	 modelview_mat = view_mat_fixed;			// M = F^-1
+	 glLoadMatrixf(modelview_mat.mData);
+	 DrawCoordinateFrame(10);
+
+	// Draws plane and its local frame
+	modelview_mat *= plane_pose;               // M = F^-1 * T
+	glLoadMatrixf(modelview_mat.mData);
+	DrawObject(P_WIDTH, P_LENGTH, P_HEIGHT);
+	DrawCoordinateFrame(3);
+
+	// Draws movable camera
+	modelview_mat = view_mat_fixed * cam_pose;   // M = F^-1 * C
+	glLoadMatrixf(modelview_mat.mData);
+	DrawCoordinateFrame(1);
 
 	glFlush();
 }
@@ -315,6 +349,29 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		break;
 
 		// TODO: Add the remaining controls
+			// PITCH //////////////////////////
+	case ',': // Pitches the plane (+ X-rot)
+		cam_pose = cam_pose * xrotp_mat;
+		break;
+	case 'i': // Pitches the plane (- X-rot)
+		cam_pose = cam_pose * xrotn_mat;
+		break;
+
+		// YAW //////////////////////////
+	case 'l': // Yaws the plane (+ Y-rot)
+		cam_pose = cam_pose * yrotp_mat;
+		break;
+	case 'j': // Yaws the plane (- Y-rot)
+		cam_pose = cam_pose * yrotn_mat;
+		break;
+
+		// ROLL //////////////////////////
+	case 'o': // Rolls the plane (+ Z-rot)
+		cam_pose = cam_pose * zrotp_mat;
+		break;
+	case 'u': // Rolls the plane (- Z-rot)
+		cam_pose = cam_pose * zrotn_mat;
+		break;
 	}
 
 	gmtl::invert(view_mat, cam_pose);       // Updates view transform to reflect the change in camera transform
