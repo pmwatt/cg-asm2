@@ -158,7 +158,7 @@ void InitMatrices()
 		0, 0, 0, 1.0f);
 	cam_pose.setState(gmtl::Matrix44f::AFFINE);
 	gmtl::invert(view_mat, cam_pose);                 // View transform is the inverse of the camera pose
-	
+
 	gmtl::Matrix44f rot_mat, trans_mat;
 	rot_mat.set(1, 0, 0, 0,				// X rot by -90 degrees
 		0, 0, 1, 0,
@@ -254,19 +254,19 @@ void DisplayFunc(void)
 	//| TODO: Viewport 2 rendering: shows the fixed top-down view
 	//|____________________________________________________________________
 
-	glViewport(w_width/2, 0, (GLsizei)w_width / 2, (GLsizei)w_height);
+	glViewport(w_width / 2, 0, (GLsizei)w_width / 2, (GLsizei)w_height);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(CAM_FOV, (float)w_width / (2 * w_height), 0.1f, 100.0f);
 
-	 glMatrixMode(GL_MODELVIEW);
-	 glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
-	 // draws world coordinate frame
-	 modelview_mat = view_mat_fixed;			// M = F^-1
-	 glLoadMatrixf(modelview_mat.mData);
-	 DrawCoordinateFrame(10);
+	// draws world coordinate frame
+	modelview_mat = view_mat_fixed;			// M = F^-1
+	glLoadMatrixf(modelview_mat.mData);
+	DrawCoordinateFrame(10);
 
 	// Draws plane and its local frame
 	modelview_mat *= plane_pose;               // M = F^-1 * T
@@ -437,8 +437,7 @@ void DrawCoordinateFrame(const float l)
 //! Draws the plane.
 //|____________________________________________________________________
 
-void DrawObject(const float width, const float length, const float height)
-{
+void DrawCube(const float width, const float length, const float height) {
 	float w2 = width / 2;
 	float h2 = height / 2;
 	float l2 = length / 2;
@@ -501,37 +500,49 @@ void DrawObject(const float width, const float length, const float height)
 	glVertex3f(-w2, -h2, l2);
 	glVertex3f(-w2, -h2, -l2);
 	glEnd();
+}
 
-	// wings //////////////////////////////////
+void DrawObject(const float width, const float length, const float height)
+{
+	// body
+	DrawCube(1.0f, 2.0f, 0.6f);
 
-	//glBegin(GL_TRIANGLES);
-	//glColor3f(.0f, .0f, .0f);
-	//glVertex3f(.0f, h2 + 0.5, -l2);
-	//glVertex3f(.0f, h2, -l2);
-	//glVertex3f(.0f, h2, -l2 / 2);
-	//glEnd();
+	// head
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, 0.9f);
+	DrawCube(0.4f, 0.6f, 0.3f);
+	glPopMatrix();
 
-	//glBegin(GL_TRIANGLES);
-	//glColor3f(.0f, .0f, .0f);
-	//glVertex3f(.0f, h2 + 0.5, -l2);
-	//glVertex3f(.0f, h2, -l2);
-	//glVertex3f(.0f, h2, -l2 / 2);
-	//glEnd();
+	// tail (tilted a bit)
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, -0.9f);
+	glRotatef(30.0f, 0.0f, 1.0f, 0.0f);
+	DrawCube(0.2f, 0.8f, 0.2f);
+	glPopMatrix();
 
-	//glBegin(GL_TRIANGLES);
-	//glColor3f(.0f, .0f, .0f);
-	//glVertex3f(.0f, h2, -l2);
-	//glVertex3f(.0f, h2, -l2);
-	//glVertex3f(.0f, h2, -l2 / 2);
-	//glEnd();
+	// front left leg
+	glPushMatrix();
+	glTranslatef(0.4f, -0.3f, 0.6f);
+	DrawCube(0.2f, 0.6f, 0.2f);
+	glPopMatrix();
 
-	//glBegin(GL_TRIANGLES);
-	//glColor3f(.0f, .0f, .0f);
-	//glVertex3f(.0f, h2 + 0.5, -l2);
-	//glVertex3f(.0f, h2, -l2);
-	//glVertex3f(.0f, h2, -l2 / 2);
-	glEnd();
+	// front right leg
+	glPushMatrix();
+	glTranslatef(-0.4f, -0.3f, 0.6f);
+	DrawCube(0.2f, 0.6f, 0.2f);
+	glPopMatrix();
 
+	// back left leg
+	glPushMatrix();
+	glTranslatef(0.4f, -0.3f, -0.6f);
+	DrawCube(0.2f, 0.6f, 0.2f);
+	glPopMatrix();
+
+	// back right leg
+	glPushMatrix();
+	glTranslatef(-0.4f, -0.3f, -0.6f);
+	DrawCube(0.2f, 0.6f, 0.2f);
+	glPopMatrix();
 }
 
 //|____________________________________________________________________
