@@ -9,10 +9,21 @@
 //! Keyboard controls:
 //!   s   = moves the plane forward
 //!   f   = moves the plane backward
-//!   q,e = rolls the plane
+//!	  x   = pitches the plane (+ X-rot)
+//!   w   = pitches the plane (- X-rot)
+//!	  d   = yaws the plane (+ Y-rot)
+//!   a   = yaws the plane (- Y-rot)
+//!   e   = rolls the plane (+ Z-rot)
+//!	  q   = rolls the plane (- Z-rot)
 //!
 //!   k   = moves the camera forward
 //!   ;   = moves the camera backward
+//!   ,   = pitches the camera (+ X-rot)
+//!   i   = pitches the camera (- X-rot)
+//!   l   = yaws the camera (+ Y-rot)
+//!   j   = yaws the camera (- Y-rot)
+//!	  u   = rolls the camera (+ Z-rot)
+//!	  o   = rolls the camera (- Z-rot)
 //!
 //! TODO: Extend the code to satisfy the requirements given in the assignment handout
 //!
@@ -113,13 +124,14 @@ void InitMatrices()
 	const float COSTHETA = cos(ROT_AMOUNT);
 	const float SINTHETA = sin(ROT_AMOUNT);
 
-	// Positive Z-Translation
+	// Positive Z-translation
 	ztransp_mat.set(1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 1, TRANS_AMOUNT,
 		0, 0, 0, 1);
 	ztransp_mat.setState(gmtl::Matrix44f::TRANS);
 
+	// Negative Z-translation
 	gmtl::invert(ztransn_mat, ztransp_mat);
 
 	// Positive Z-rotation (roll)
@@ -132,7 +144,7 @@ void InitMatrices()
 	// Negative Z-rotation (roll)
 	gmtl::invert(zrotn_mat, zrotp_mat);
 
-	// Positive Y-rotation (roll)
+	// Positive Y-rotation (yaw)
 	yrotp_mat.set(COSTHETA, 0, SINTHETA, 0,
 		0, 1, 0, 0,
 		-SINTHETA, 0, COSTHETA, 0,
@@ -324,10 +336,10 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		break;
 
 		// YAW //////////////////////////
-	case 'a': // Yaws the plane (+ Y-rot)
+	case 'd': // Yaws the plane (+ Y-rot)
 		plane_pose = plane_pose * yrotp_mat;
 		break;
-	case 'd': // Yaws the plane (- Y-rot)
+	case 'a': // Yaws the plane (- Y-rot)
 		plane_pose = plane_pose * yrotn_mat;
 		break;
 
@@ -358,26 +370,26 @@ void KeyboardFunc(unsigned char key, int x, int y)
 
 		// TODO: Add the remaining controls
 			// PITCH //////////////////////////
-	case ',': // Pitches the plane (+ X-rot)
+	case ',': // Pitches the camera (+ X-rot)
 		cam_pose = cam_pose * xrotp_mat;
 		break;
-	case 'i': // Pitches the plane (- X-rot)
+	case 'i': // Pitches the camera (- X-rot)
 		cam_pose = cam_pose * xrotn_mat;
 		break;
 
 		// YAW //////////////////////////
-	case 'l': // Yaws the plane (+ Y-rot)
+	case 'l': // Yaws the camera (+ Y-rot)
 		cam_pose = cam_pose * yrotp_mat;
 		break;
-	case 'j': // Yaws the plane (- Y-rot)
+	case 'j': // Yaws the camera (- Y-rot)
 		cam_pose = cam_pose * yrotn_mat;
 		break;
 
 		// ROLL //////////////////////////
-	case 'o': // Rolls the plane (+ Z-rot)
+	case 'u': // Rolls the camera (+ Z-rot)
 		cam_pose = cam_pose * zrotp_mat;
 		break;
-	case 'u': // Rolls the plane (- Z-rot)
+	case 'o': // Rolls the camera (- Z-rot)
 		cam_pose = cam_pose * zrotn_mat;
 		break;
 	}
