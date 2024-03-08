@@ -85,11 +85,11 @@ gmtl::Matrix44f xrotp_mat; // positive
 gmtl::Matrix44f xrotn_mat; // negative
 
 // preset colours
-float colour_brown[3] = {0.45f, 0.32f, 0.22f};
-float colour_lime_green[3] = {0.35f, 0.47f, 0.10f};
-float colour_light_lime_green[3] = {0.45f, 0.57f, 0.20f};
-float colour_dark_gray[3] = {0.2f, 0.2f, 0.2f};
-float colour_light_pink[3] = {0.87f, 0.66f, 0.66f};
+float colour_brown[3] = { 0.45f, 0.32f, 0.22f };
+float colour_lime_green[3] = { 0.35f, 0.47f, 0.10f };
+float colour_light_lime_green[3] = { 0.45f, 0.57f, 0.20f };
+float colour_dark_gray[3] = { 0.2f, 0.2f, 0.2f };
+float colour_light_pink[3] = { 0.87f, 0.66f, 0.66f };
 
 
 //|___________________
@@ -461,66 +461,75 @@ void drawCube(const float width, const float length, const float height, const f
 	float h2 = height / 2;
 	float l2 = length / 2;
 
-	float colours_copy[3] = {colours[0], colours[1], colours[2]}; // modify the copy only (arrays are passed by reference)
-	float c_delta = 0.05f; // for adding subtle shadow
+	// modify the copy only (arrays are passed by reference)
+	float colours_copy[3] = { colours[0], colours[1], colours[2] };
+
+	// for adding shadow, increase this to add contrast, vice versa
+	float c_delta = 0.05f;
 
 	glBegin(GL_QUADS);
-	// front
+
+	// front face
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(w2, h2, -l2);
 	glVertex3f(-w2, h2, -l2);
 	glVertex3f(-w2, -h2, -l2);
 	glVertex3f(w2, -h2, -l2);
 
+	// increase brightness
 	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
 	colours_copy[2] += c_delta;
 
-	// right
+	// right face
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(w2, h2, -l2);
 	glVertex3f(w2, h2, l2);
 	glVertex3f(w2, -h2, l2);
 	glVertex3f(w2, -h2, -l2);
 
+	// increase brightness
 	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
 	colours_copy[2] += c_delta;
 
-	// top
+	// top face
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(w2, h2, l2);
 	glVertex3f(-w2, h2, l2);
 	glVertex3f(-w2, h2, -l2);
 	glVertex3f(w2, h2, -l2);
 
+	// increase brightness
 	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
 	colours_copy[2] += c_delta;
 
-	// bottom
+	// bottom face
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(w2, -h2, -l2);
 	glVertex3f(-w2, -h2, -l2);
 	glVertex3f(-w2, -h2, l2);
 	glVertex3f(w2, -h2, l2);
 
+	// increase brightness
 	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
 	colours_copy[2] += c_delta;
 
-	// back
+	// back face
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(-w2, h2, l2);
 	glVertex3f(w2, h2, l2);
 	glVertex3f(w2, -h2, l2);
 	glVertex3f(-w2, -h2, l2);
 
+	// increase brightness
 	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
 	colours_copy[2] += c_delta;
 
-	// left
+	// left face
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(-w2, h2, -l2);
 	glVertex3f(-w2, h2, l2);
@@ -531,58 +540,63 @@ void drawCube(const float width, const float length, const float height, const f
 
 void DrawObject(const float width, const float length, const float height)
 {
+	// drawCube() is a custom function that we made for drawing a cube
+	// supporting specified dimensions, colour that we defined globally, and shadow.
+
+	// for glPushMatrix() and glPopMatrix(), we researched based on this:
+	// https://community.khronos.org/t/glpushmatrix-glpopmatrix/20189
+
 	// shell
-	drawCube(1.7f*width, 2.0f*length, 0.7f*height, colour_brown);
-	drawCube(1.4f*width, 1.6f*length, 0.9f*height, colour_brown);
+	drawCube(1.7f * width, 2.0f * length, 0.7f * height, colour_brown);
+	drawCube(1.4f * width, 1.6f * length, 0.9f * height, colour_brown);
 
 	// head
 	glPushMatrix();
-	glTranslatef(0.0f*width, -0.1f*height, 0.8f*length);
-	//drawCube(0.75f*width, 0.75f*length, 0.1f*height, colour_light_lime_green);
-	drawCube(0.7f*width, 0.7f*length, 0.45f*height, colour_lime_green);
+	glTranslatef(0.0f * width, -0.1f * height, 0.8f * length);
+	drawCube(0.7f * width, 0.7f * length, 0.45f * height, colour_lime_green);
 	glPopMatrix();
 
 	// left eye
 	glPushMatrix();
-	glTranslatef(-0.27f*width, -0.20f*height, 1.15f*length);
-	drawCube(0.11f*width, 0.11f*length, 0.11f*height, colour_dark_gray);
+	glTranslatef(-0.27f * width, -0.20f * height, 1.15f * length);
+	drawCube(0.11f * width, 0.11f * length, 0.11f * height, colour_dark_gray);
 	glPopMatrix();
 
 	// right eye
 	glPushMatrix();
-	glTranslatef(0.27f*width, -0.20f*height, 1.15f*length);
-	drawCube(0.11f*width, 0.11f*length, 0.11f*height, colour_dark_gray);
+	glTranslatef(0.27f * width, -0.20f * height, 1.15f * length);
+	drawCube(0.11f * width, 0.11f * length, 0.11f * height, colour_dark_gray);
 	glPopMatrix();
 
 	// tail (tilted a bit)
 	glPushMatrix();
-	glTranslatef(0.0f*width, -0.2f*height, -0.9f*length);
-	glRotatef(30.0f, 0.0f*width, 1.0f*height, 0.0f*length);
-	drawCube(0.2f*width, 0.8f*length, 0.2f, colour_lime_green);
+	glTranslatef(0.0f * width, -0.2f * height, -0.9f * length);
+	glRotatef(30.0f, 0.0f * width, 1.0f * height, 0.0f * length);
+	drawCube(0.2f * width, 0.8f * length, 0.2f * height, colour_lime_green);
 	glPopMatrix();
 
 	// front left leg
 	glPushMatrix();
-	glTranslatef(0.9f*width, -0.26f*height, 0.6f*length);
-	drawCube(1.6f*width, 0.6f*length, 0.15f*height, colour_light_lime_green);
+	glTranslatef(0.9f * width, -0.26f * height, 0.6f * length);
+	drawCube(1.6f * width, 0.6f * length, 0.15f * height, colour_light_lime_green);
 	glPopMatrix();
 
 	// front right leg
 	glPushMatrix();
-	glTranslatef(-0.9f*width, -0.26f*height, 0.6f*length);
-	drawCube(1.6f*width, 0.6f*length, 0.15f*height, colour_light_lime_green);
+	glTranslatef(-0.9f * width, -0.26f * height, 0.6f * length);
+	drawCube(1.6f * width, 0.6f * length, 0.15f * height, colour_light_lime_green);
 	glPopMatrix();
 
 	// back left leg
 	glPushMatrix();
-	glTranslatef(0.9f*width, -0.28f*height, -0.6f*length);
-	drawCube(0.8f*width, 0.6f*length, 0.13f*height, colour_light_lime_green);
+	glTranslatef(0.9f * width, -0.28f * height, -0.6f * length);
+	drawCube(0.8f * width, 0.6f * length, 0.13f * height, colour_light_lime_green);
 	glPopMatrix();
 
 	// back right leg
 	glPushMatrix();
-	glTranslatef(-0.9f*width, -0.28f*height, -0.6f*length);
-	drawCube(0.8f*width, 0.6f*length, 0.13f*height, colour_light_lime_green);
+	glTranslatef(-0.9f * width, -0.28f * height, -0.6f * length);
+	drawCube(0.8f * width, 0.6f * length, 0.13f * height, colour_light_lime_green);
 	glPopMatrix();
 }
 
@@ -605,7 +619,7 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(w_width, w_height);
 
-	glutCreateWindow("Plane Episode 1");
+	glutCreateWindow("Sea Turtle Plane Episode 1");
 
 	glutDisplayFunc(DisplayFunc);
 	glutReshapeFunc(ReshapeFunc);
