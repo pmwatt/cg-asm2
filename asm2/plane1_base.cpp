@@ -511,55 +511,55 @@ void drawCube(const float width, const float length, const float height, const f
 void DrawObject(const float width, const float length, const float height)
 {
 	// shell
-	drawCube(1.0f, 2.0f, 0.7f, colour_brown);
+	drawCube(1.7f*width, 2.0f*length, 0.7f*height, colour_brown);
 
 	// head
 	glPushMatrix();
-	glTranslatef(0.0f, -0.1f, 0.8f);
-	drawCube(0.7f, 0.7f, 0.45f, colour_lime_green);
+	glTranslatef(0.0f*width, -0.1f*height, 0.8f*length);
+	drawCube(0.7f*width, 0.7f*length, 0.45f*height, colour_lime_green);
 	glPopMatrix();
 
 	// left eye
 	glPushMatrix();
-	glTranslatef(-0.27f, -0.20f, 1.15f);
-	drawCube(0.11f, 0.11f, 0.11f, colour_dark_gray);
+	glTranslatef(-0.27f*width, -0.20f*height, 1.15f*length);
+	drawCube(0.11f*width, 0.11f*length, 0.11f*height, colour_dark_gray);
 	glPopMatrix();
 
 	// right eye
 	glPushMatrix();
-	glTranslatef(0.27f, -0.20f, 1.15f);
-	drawCube(0.11f, 0.11f, 0.11f, colour_dark_gray);
+	glTranslatef(0.27f*width, -0.20f*height, 1.15f*length);
+	drawCube(0.11f*width, 0.11f*length, 0.11f*height, colour_dark_gray);
 	glPopMatrix();
 
 	// tail (tilted a bit)
 	glPushMatrix();
-	glTranslatef(0.0f, -0.2f, -0.9f);
-	glRotatef(30.0f, 0.0f, 1.0f, 0.0f);
-	drawCube(0.2f, 0.8f, 0.2f, colour_lime_green);
+	glTranslatef(0.0f*width, -0.2f*height, -0.9f*length);
+	glRotatef(30.0f, 0.0f*width, 1.0f*height, 0.0f*length);
+	drawCube(0.2f*width, 0.8f*length, 0.2f, colour_lime_green);
 	glPopMatrix();
 
 	// front left leg
 	glPushMatrix();
-	glTranslatef(0.6f, -0.1f, 0.6f);
-	drawCube(1.6f, 0.6f, 0.15f, colour_light_lime_green);
+	glTranslatef(0.9f*width, -0.26f*height, 0.6f*length);
+	drawCube(1.6f*width, 0.6f*length, 0.15f*height, colour_light_lime_green);
 	glPopMatrix();
 
 	// front right leg
 	glPushMatrix();
-	glTranslatef(-0.6f, -0.1f, 0.6f);
-	drawCube(1.6f, 0.6f, 0.15f, colour_light_lime_green);
+	glTranslatef(-0.9f*width, -0.26f*height, 0.6f*length);
+	drawCube(1.6f*width, 0.6f*length, 0.15f*height, colour_light_lime_green);
 	glPopMatrix();
 
 	// back left leg
 	glPushMatrix();
-	glTranslatef(0.6f, -0.2f, -0.6f);
-	drawCube(0.8f, 0.6f, 0.15f, colour_light_lime_green);
+	glTranslatef(0.9f*width, -0.28f*height, -0.6f*length);
+	drawCube(0.8f*width, 0.6f, 0.15f, colour_light_lime_green);
 	glPopMatrix();
 
 	// back right leg
 	glPushMatrix();
-	glTranslatef(-0.6f, -0.2f, -0.6f);
-	drawCube(0.8f, 0.6f, 0.15f, colour_light_lime_green);
+	glTranslatef(-0.9f*width, -0.28f*height, -0.6f*length);
+	drawCube(0.8f*width, 0.6f, 0.15f, colour_light_lime_green);
 	glPopMatrix();
 }
 
