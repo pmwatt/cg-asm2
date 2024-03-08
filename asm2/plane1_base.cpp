@@ -105,13 +105,14 @@ void InitMatrices()
 	const float COSTHETA = cos(ROT_AMOUNT);
 	const float SINTHETA = sin(ROT_AMOUNT);
 
-	// Positive Z-Translation
+	// Positive Z-translation
 	ztransp_mat.set(1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 1, TRANS_AMOUNT,
 		0, 0, 0, 1);
 	ztransp_mat.setState(gmtl::Matrix44f::TRANS);
 
+	// Negative Z-translation
 	gmtl::invert(ztransn_mat, ztransp_mat);
 
 	// Positive Z-rotation (roll)
@@ -124,7 +125,7 @@ void InitMatrices()
 	// Negative Z-rotation (roll)
 	gmtl::invert(zrotn_mat, zrotp_mat);
 
-	// Positive Y-rotation (roll)
+	// Positive Y-rotation (yaw)
 	yrotp_mat.set(COSTHETA, 0, SINTHETA, 0,
 		0, 1, 0, 0,
 		-SINTHETA, 0, COSTHETA, 0,
@@ -316,10 +317,10 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		break;
 
 		// YAW //////////////////////////
-	case 'a': // Yaws the plane (+ Y-rot)
+	case 'd': // Yaws the plane (+ Y-rot)
 		plane_pose = plane_pose * yrotp_mat;
 		break;
-	case 'd': // Yaws the plane (- Y-rot)
+	case 'a': // Yaws the plane (- Y-rot)
 		plane_pose = plane_pose * yrotn_mat;
 		break;
 
@@ -366,10 +367,10 @@ void KeyboardFunc(unsigned char key, int x, int y)
 		break;
 
 		// ROLL //////////////////////////
-	case 'o': // Rolls the plane (+ Z-rot)
+	case 'u': // Rolls the plane (+ Z-rot)
 		cam_pose = cam_pose * zrotp_mat;
 		break;
-	case 'u': // Rolls the plane (- Z-rot)
+	case 'o': // Rolls the plane (- Z-rot)
 		cam_pose = cam_pose * zrotn_mat;
 		break;
 	}
