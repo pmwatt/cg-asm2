@@ -451,7 +451,7 @@ void drawCube(const float width, const float length, const float height, const f
 	float l2 = length / 2;
 
 	float colours_copy[3] = {colours[0], colours[1], colours[2]}; // modify the copy only (arrays are passed by reference)
-	float c_delta = 0.03f; // for adding subtle shadow
+	float c_delta = 0.05f; // for adding subtle shadow
 
 	glBegin(GL_QUADS);
 	// front
@@ -461,7 +461,9 @@ void drawCube(const float width, const float length, const float height, const f
 	glVertex3f(-w2, -h2, -l2);
 	glVertex3f(w2, -h2, -l2);
 
+	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
+	colours_copy[2] += c_delta;
 
 	// right
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
@@ -470,7 +472,9 @@ void drawCube(const float width, const float length, const float height, const f
 	glVertex3f(w2, -h2, l2);
 	glVertex3f(w2, -h2, -l2);
 
+	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
+	colours_copy[2] += c_delta;
 
 	// top
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
@@ -479,7 +483,9 @@ void drawCube(const float width, const float length, const float height, const f
 	glVertex3f(-w2, h2, -l2);
 	glVertex3f(w2, h2, -l2);
 
+	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
+	colours_copy[2] += c_delta;
 
 	// bottom
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
@@ -488,7 +494,9 @@ void drawCube(const float width, const float length, const float height, const f
 	glVertex3f(-w2, -h2, l2);
 	glVertex3f(w2, -h2, l2);
 
+	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
+	colours_copy[2] += c_delta;
 
 	// back
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
@@ -497,7 +505,9 @@ void drawCube(const float width, const float length, const float height, const f
 	glVertex3f(w2, -h2, l2);
 	glVertex3f(-w2, -h2, l2);
 
+	colours_copy[0] += c_delta;
 	colours_copy[1] += c_delta;
+	colours_copy[2] += c_delta;
 
 	// left
 	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
