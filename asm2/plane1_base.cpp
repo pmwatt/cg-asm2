@@ -9,10 +9,21 @@
 //! Keyboard controls:
 //!   s   = moves the plane forward
 //!   f   = moves the plane backward
-//!   q,e = rolls the plane
+//!	  x   = pitches the plane (+ X-rot)
+//!   w   = pitches the plane (- X-rot)
+//!	  d   = yaws the plane (+ Y-rot)
+//!   a   = yaws the plane (- Y-rot)
+//!   e   = rolls the plane (+ Z-rot)
+//!	  q   = rolls the plane (- Z-rot)
 //!
 //!   k   = moves the camera forward
 //!   ;   = moves the camera backward
+//!   ,   = pitches the camera (+ X-rot)
+//!   i   = pitches the camera (- X-rot)
+//!   l   = yaws the camera (+ Y-rot)
+//!   j   = yaws the camera (- Y-rot)
+//!	  u   = rolls the camera (+ Z-rot)
+//!	  o   = rolls the camera (- Z-rot)
 //!
 //! TODO: Extend the code to satisfy the requirements given in the assignment handout
 //!
@@ -351,26 +362,26 @@ void KeyboardFunc(unsigned char key, int x, int y)
 
 		// TODO: Add the remaining controls
 			// PITCH //////////////////////////
-	case ',': // Pitches the plane (+ X-rot)
+	case ',': // Pitches the camera (+ X-rot)
 		cam_pose = cam_pose * xrotp_mat;
 		break;
-	case 'i': // Pitches the plane (- X-rot)
+	case 'i': // Pitches the camera (- X-rot)
 		cam_pose = cam_pose * xrotn_mat;
 		break;
 
 		// YAW //////////////////////////
-	case 'l': // Yaws the plane (+ Y-rot)
+	case 'l': // Yaws the camera (+ Y-rot)
 		cam_pose = cam_pose * yrotp_mat;
 		break;
-	case 'j': // Yaws the plane (- Y-rot)
+	case 'j': // Yaws the camera (- Y-rot)
 		cam_pose = cam_pose * yrotn_mat;
 		break;
 
 		// ROLL //////////////////////////
-	case 'u': // Rolls the plane (+ Z-rot)
+	case 'u': // Rolls the camera (+ Z-rot)
 		cam_pose = cam_pose * zrotp_mat;
 		break;
-	case 'o': // Rolls the plane (- Z-rot)
+	case 'o': // Rolls the camera (- Z-rot)
 		cam_pose = cam_pose * zrotn_mat;
 		break;
 	}
