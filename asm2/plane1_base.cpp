@@ -89,7 +89,6 @@ float colour_brown[3] = {0.45f, 0.32f, 0.22f};
 float colour_lime_green[3] = {0.35f, 0.47f, 0.10f};
 float colour_light_lime_green[3] = {0.45f, 0.57f, 0.20f};
 float colour_dark_gray[3] = {0.2f, 0.2f, 0.2f};
-// rgb(172, 92, 92)
 float colour_light_pink[3] = {0.87f, 0.66f, 0.66f};
 
 
@@ -534,10 +533,12 @@ void DrawObject(const float width, const float length, const float height)
 {
 	// shell
 	drawCube(1.7f*width, 2.0f*length, 0.7f*height, colour_brown);
+	drawCube(1.4f*width, 1.6f*length, 0.9f*height, colour_brown);
 
 	// head
 	glPushMatrix();
 	glTranslatef(0.0f*width, -0.1f*height, 0.8f*length);
+	//drawCube(0.75f*width, 0.75f*length, 0.1f*height, colour_light_lime_green);
 	drawCube(0.7f*width, 0.7f*length, 0.45f*height, colour_lime_green);
 	glPopMatrix();
 
@@ -575,13 +576,13 @@ void DrawObject(const float width, const float length, const float height)
 	// back left leg
 	glPushMatrix();
 	glTranslatef(0.9f*width, -0.28f*height, -0.6f*length);
-	drawCube(0.8f*width, 0.6f, 0.15f, colour_light_lime_green);
+	drawCube(0.8f*width, 0.6f*length, 0.13f*height, colour_light_lime_green);
 	glPopMatrix();
 
 	// back right leg
 	glPushMatrix();
 	glTranslatef(-0.9f*width, -0.28f*height, -0.6f*length);
-	drawCube(0.8f*width, 0.6f, 0.15f, colour_light_lime_green);
+	drawCube(0.8f*width, 0.6f*length, 0.13f*height, colour_light_lime_green);
 	glPopMatrix();
 }
 
