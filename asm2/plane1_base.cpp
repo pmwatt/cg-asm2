@@ -73,6 +73,14 @@ gmtl::Matrix44f yrotn_mat; // negative
 gmtl::Matrix44f xrotp_mat; // positive
 gmtl::Matrix44f xrotn_mat; // negative
 
+// preset colours
+float colour_brown[3] = {0.45f, 0.32f, 0.22f};
+float colour_lime_green[3] = {0.35f, 0.47f, 0.10f};
+float colour_light_lime_green[3] = {0.45f, 0.57f, 0.20f};
+float colour_dark_gray[3] = {0.2f, 0.2f, 0.2f};
+// rgb(172, 92, 92)
+float colour_light_pink[3] = {0.87f, 0.66f, 0.66f};
+
 
 //|___________________
 //|
@@ -437,64 +445,62 @@ void DrawCoordinateFrame(const float l)
 //! Draws the plane.
 //|____________________________________________________________________
 
-void DrawCube(const float width, const float length, const float height) {
+void drawCube(const float width, const float length, const float height, const float colours[3]) {
 	float w2 = width / 2;
 	float h2 = height / 2;
 	float l2 = length / 2;
 
-	float cr = 0.1f;
-	float cg = 0.3f;
-	float cb = 0.2f;
-	float c_delta = 0.05f;
+	float colours_copy[3] = {colours[0], colours[1], colours[2]}; // modify the copy only (arrays are passed by reference)
+	float c_delta = 0.03f; // for adding subtle shadow
 
 	glBegin(GL_QUADS);
 	// front
-	glColor3f(cr, cg, cb);
+	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(w2, h2, -l2);
 	glVertex3f(-w2, h2, -l2);
 	glVertex3f(-w2, -h2, -l2);
 	glVertex3f(w2, -h2, -l2);
 
-	cg += c_delta;
+	colours_copy[1] += c_delta;
 
 	// right
-	glColor3f(cr, cg, cb);
+	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(w2, h2, -l2);
 	glVertex3f(w2, h2, l2);
 	glVertex3f(w2, -h2, l2);
 	glVertex3f(w2, -h2, -l2);
 
-	cg += c_delta;
+	colours_copy[1] += c_delta;
 
 	// top
-	glColor3f(cr, cg, cb);
+	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(w2, h2, l2);
 	glVertex3f(-w2, h2, l2);
 	glVertex3f(-w2, h2, -l2);
 	glVertex3f(w2, h2, -l2);
 
-	cg += c_delta;
+	colours_copy[1] += c_delta;
 
 	// bottom
-	glColor3f(cr, cg, cb);
+	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(w2, -h2, -l2);
 	glVertex3f(-w2, -h2, -l2);
 	glVertex3f(-w2, -h2, l2);
 	glVertex3f(w2, -h2, l2);
 
-	cg += c_delta;
+	colours_copy[1] += c_delta;
 
 	// back
-	glColor3f(cr, cg, cb);
+	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(-w2, h2, l2);
 	glVertex3f(w2, h2, l2);
 	glVertex3f(w2, -h2, l2);
 	glVertex3f(-w2, -h2, l2);
 
-	cg += c_delta;
+	colours_copy[1] += c_delta;
 
 	// left
-	glColor3f(cr, cg, cb);
+	glColor3f(colours_copy[0], colours_copy[1], colours_copy[2]);
 	glVertex3f(-w2, h2, -l2);
 	glVertex3f(-w2, h2, l2);
 	glVertex3f(-w2, -h2, l2);
@@ -504,44 +510,56 @@ void DrawCube(const float width, const float length, const float height) {
 
 void DrawObject(const float width, const float length, const float height)
 {
-	// body
-	DrawCube(1.0f, 2.0f, 0.6f);
+	// shell
+	drawCube(1.0f, 2.0f, 0.7f, colour_brown);
 
 	// head
 	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, 0.9f);
-	DrawCube(0.4f, 0.6f, 0.3f);
+	glTranslatef(0.0f, -0.1f, 0.8f);
+	drawCube(0.7f, 0.7f, 0.45f, colour_lime_green);
+	glPopMatrix();
+
+	// left eye
+	glPushMatrix();
+	glTranslatef(-0.27f, -0.20f, 1.15f);
+	drawCube(0.11f, 0.11f, 0.11f, colour_dark_gray);
+	glPopMatrix();
+
+	// right eye
+	glPushMatrix();
+	glTranslatef(0.27f, -0.20f, 1.15f);
+	drawCube(0.11f, 0.11f, 0.11f, colour_dark_gray);
 	glPopMatrix();
 
 	// tail (tilted a bit)
 	glPushMatrix();
-	glTranslatef(0.0f, 0.0f, -0.9f);
+	glTranslatef(0.0f, -0.2f, -0.9f);
 	glRotatef(30.0f, 0.0f, 1.0f, 0.0f);
-	DrawCube(0.2f, 0.8f, 0.2f);
+	drawCube(0.2f, 0.8f, 0.2f, colour_lime_green);
 	glPopMatrix();
 
 	// front left leg
 	glPushMatrix();
-	glTranslatef(0.4f, -0.3f, 0.6f);
-	DrawCube(0.2f, 0.6f, 0.2f);
+	glTranslatef(0.6f, -0.1f, 0.6f);
+	drawCube(1.6f, 0.6f, 0.15f, colour_light_lime_green);
 	glPopMatrix();
 
 	// front right leg
 	glPushMatrix();
-	glTranslatef(-0.4f, -0.3f, 0.6f);
-	DrawCube(0.2f, 0.6f, 0.2f);
+	glTranslatef(-0.6f, -0.1f, 0.6f);
+	drawCube(1.6f, 0.6f, 0.15f, colour_light_lime_green);
 	glPopMatrix();
 
 	// back left leg
 	glPushMatrix();
-	glTranslatef(0.4f, -0.3f, -0.6f);
-	DrawCube(0.2f, 0.6f, 0.2f);
+	glTranslatef(0.6f, -0.2f, -0.6f);
+	drawCube(0.8f, 0.6f, 0.15f, colour_light_lime_green);
 	glPopMatrix();
 
 	// back right leg
 	glPushMatrix();
-	glTranslatef(-0.4f, -0.3f, -0.6f);
-	DrawCube(0.2f, 0.6f, 0.2f);
+	glTranslatef(-0.6f, -0.2f, -0.6f);
+	drawCube(0.8f, 0.6f, 0.15f, colour_light_lime_green);
 	glPopMatrix();
 }
 
